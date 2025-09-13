@@ -12,10 +12,10 @@ import java.util.concurrent.CompletableFuture;
 public class KafkaMessagePublisher {
     //to publish a mesage from application we need to use some class to talk to kafka that class is KafkaTemplate
     @Autowired
-    private KafkaTemplate<Object, Customer> kafkaEvents;
+    private KafkaTemplate<String, Object> kafkaEvents;
 
-    @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+//    @Autowired
+//    private KafkaTemplate<String, String> kafkaTemplate;
 
     public void sendMessageToTopic(String message){
         //whenever we allow sb to create topic on behalf of us it will use the default config and create a topic
@@ -31,7 +31,7 @@ public class KafkaMessagePublisher {
 // this was custom topic created from terminal there is a way from SB also that we can create a topic with custom config
 //rkstechie-custom-java-topic => from kafkaProducerConfig file
 //
-        CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send("rkstechie-custom-java-topic-3", message);
+        CompletableFuture<SendResult<String, Object>> future = kafkaEvents.send("rkstechie-custom-java-topic-3", message);
 
 
         // if here we use future.get the thread will wait for the result and slow down the producer
@@ -52,7 +52,7 @@ public class KafkaMessagePublisher {
         try {
 
 
-            CompletableFuture<SendResult<Object, Customer>> future = kafkaEvents.send("rkstechie-serialize-3", customer);
+            CompletableFuture<SendResult<String, Object>> future = kafkaEvents.send("rkstechie-serialize-3", customer);
 
             future.whenComplete((result, ex) -> {
 
